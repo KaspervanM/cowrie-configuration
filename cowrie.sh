@@ -36,8 +36,13 @@ if [ "$#" -eq 0 ]; then
   show_usage
 fi
 
-CONFIGS="$@"
+cleanup() {
+  [[ -n "${TMP_USERDB:-}" ]] && rm -rf "$TMP_USERDB" || true
+}
 
+trap cleanup SIGINT SIGTERM EXIT
+
+CONFIGS="$@"
 
 for CONFIG in ${CONFIGS[@]}; do
   case $CONFIG in
